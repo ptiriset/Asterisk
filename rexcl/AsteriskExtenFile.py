@@ -6,12 +6,12 @@ __conf_init__ = """
 ; ARG1 -> icom_name
 ; ARG2 -> icom_no
 ; ARG3 -> rly_no
-exten => s, 1, Set(CALLERID(all) = ${CLI_ICOM})
+exten => s, 1, Set(CALLERID(all)=${CLI_ICOM})
   same => n(common), Set(REDIR=${DB(${ARG1}-redir/${ARG2})})
   same => n, GotoIf($[${ISNULL(${REDIR})}]?internal:redir)
-  same => n(internal), Dial(SIP/${ARG3}, 60, tT)
+  same => n(internal), Dial(SIP/${ARG3},60,tT)
   same => n, Hangup
-  same => n(redir), Goto(${REDIR}, common)
+  same => n(redir), Goto(${REDIR},common)
 
 
 [dial_rly_remote]
@@ -46,11 +46,11 @@ exten => s, 1, Set(STATUS=${SIPPEER(${ARG1},status)})
 exten => s, 1, GotoIf($[${ARG4} = no ] ? noclimod)
   same => n, Set(CALLERID(all)=${CLI_RLY})
   same => n(noclimod), Set(REDIR=${DB(rly-redir/${ARG1})})
-  same => n, GotoIf($[${REDIR} != ""]?redir)
-  same => n, GotoIf($[${ARG2} = ""]?nosecy)
+  same => n, GotoIf($[ "${REDIR}X" != "X"]?redir)
+  same => n, GotoIf($["${ARG2}X" = "X"]?nosecy)
   same => n, GotoIf($[${CALLERID(num)} = ${ARG2}]?nosecy)
   same => n, GotoIf($[${ARG3}=only-secy]?only-secy)
-  same => n, Dial(SIP/${ARG2},60,tT)
+  same => n, Dial(SIP/${ARG2},15,tT)
   same => n(nosecy), Dial(SIP/${ARG1},60,tT)
   same => n, Hangup
   same => n(only-secy) DIal(SIP/${ARG2},60,tT)
@@ -62,7 +62,7 @@ exten => s, 1, GotoIf($[${ARG4} = no ] ? noclimod)
 ; ARG1 -> rly_no
 exten => s, 1, Set(CALLERID(all)=${CLI_BYTE})
   same => n, Set(REDIR=${DB(byte-redir/${ARG1})})
-  same => n, GotoIf($[${REDIR} != ""]?redir)
+  same => n, GotoIf($[ "${REDIR}X" != "X"]?redir)
   same => n, Dial(SIP/${ARG1},60,tT)
   same => n(redir), Goto(byte-icom,${REDIR})
 
@@ -75,6 +75,31 @@ exten => s, 1, Answer
     same => n, Read(pin,,4)
     same => n, Set(DB(conf/${ARG1})=${pin})
     same => n, Goto(rly,playpin-${ARG2},1)
+    same => n, Hangup
+
+[rly]
+;conference admin - play pin.
+exten => *26630*, 1, Set(CALLERID(all)=${CLI_RLY})
+    same => n, Set(ADMIN=${CALLERID(num)})
+    same => n, Goto(rly,playpin-${ADMIN},1)
+
+;conference admin - set pin.
+exten => *26631*, 1, Set(CALLERID(all)=${CLI_RLY})
+    same => n, Set(ADMIN=${CALLERID(num)})
+    same => n, Goto(rly,setpin-${ADMIN},1)
+
+exten => *30, 1, CallCompletionRequest
+    same => n, Answer(500)
+    same => n, Playback(auth-thankyou)
+    same => n, Hangup
+
+exten => *31, 1, CallCompletionCancel
+    same => n, Answer(500)
+    same => n, Playback(auth-thankyou)
+    same => n, Hangup
+
+exten => *38, 1, Answer
+    same => n, SayUnixTime(,Asia/Kolkata,ABdY \’digits/at\’ IMp)
     same => n, Hangup
 
 """
@@ -144,12 +169,12 @@ class AsteriskExtenFile:
     # sip1
     # sip2
     # rly_std_code
-    __conf_dial_rly_remote_t = Template('exten => $rly_no, 1, GoSub(dial_rly_remote,s,1(t$rly_no,$sip1,$sip2,$rly_std_code)\n')
+    __conf_dial_rly_remote_t = Template('exten => $rly_no, 1, GoSub(dial_rly_remote,s,1(t$rly_no,$sip1,$sip2,$rly_std_code))\n')
 
     # rly_no
     # secy_no
-    __conf_dial_rly_local_t = Template('exten => $rly_no, 1, GoSub(dial_rly_local,s,1($rly_no,$secy_no,$secy_type,yes)\n'
-                                       'exten => t$rly_no, 1, GoSub(dial_rly_local,s,1($rly_no,$secy_no,$secy_type,no)\n'
+    __conf_dial_rly_local_t = Template('exten => $rly_no, 1, GoSub(dial_rly_local,s,1($rly_no,$secy_no,$secy_type,yes))\n'
+                                       'exten => t$rly_no, 1, GoSub(dial_rly_local,s,1($rly_no,$secy_no,$secy_type,no))\n'
                                        )
     __conf_byte_local_t = Template(
         'exten => byte-$rly_no, 1, GoSub(dial_byte_local,s,1($rly_no))\n')
@@ -185,8 +210,11 @@ class AsteriskExtenFile:
     # $name
     # $admin_phone_no
     __conf_conference_local_t = Template(
-        'exten => $conf_no, 1, GoSub(dial_rly_local,s,1(conf-$conf_no,,yes)\n'
-        'exten => t$conf_no, 1, GoSub(dial_rly_local,s,1(conf-$conf_no,,no)\n'
+        'exten => $conf_no, 1, Noop\n'
+            'same => n, Set(CALLERID(all)=$${CLI_RLY})\n'
+            'same => n, Goto(conf-$conf_no,1)\n'
+        'exten => t$conf_no, 1, Noop\n'
+            'same => n, Goto(conf-$conf_no,1)\n'
         'exten => conf-$conf_no,1,Answer\n'
         '    same => n, Playback(conf-getpin)\n'
         '    same => n, Read(pin,,4)\n'
