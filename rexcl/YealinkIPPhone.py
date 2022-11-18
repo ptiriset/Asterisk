@@ -14,7 +14,7 @@ class YealinkIPPhone:
                           'account.1.auth_name = $rly_no\n' 
                           'account.1.user_name = $rly_no\n' 
                           'account.1.password = $secret\n' 
-                          'account.1.cid_source = 2\n'
+                          'account.1.cid_source = 3\n'
                           'account.1.sip_server.1.address = $regip\n'
                           'local_time.time_zone = +5:30\n'
                           'local_time.net_server1 = $ntp_server\n'
