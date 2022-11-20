@@ -33,7 +33,7 @@ case $1 in
         done
 
         mv $CONF_DIR/9_old $CONF_DIR/1
-        rm $CONF_DIR/1/*.conf 2>&1 > /dev/null
+        rm $CONF_DIR/1/*.conf > /dev/null 2>&1
         cp $CONF_DIR/*.conf $CONF_DIR/1/
         echo " Done.!"
         cp *.conf $CONF_DIR/
