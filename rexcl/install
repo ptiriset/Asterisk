@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SIP_CONF=/etc/asterisk.sip.conf
+SIP_CONF=/etc/asterisk/sip.conf
 SIP_STR=/etc/asterisk/voip/*-sip.conf
 EXTEN_CONF=/etc/asterisk/extensions.conf
 EXTEN_STR=/etc/asterisk/voip/*-exten.conf
@@ -10,12 +10,24 @@ apt-get update
 apt-get -y upgrade
 
 echo -n "Installing git and apache2 ... "
-apt-get -y install git apache2 asterisk
+apt-get -y install git apache2 asterisk asterisk-config
 mkdir -p /var/www/html/phones
 
 
 echo -n " Installing rexclconf ... "
 cd /usr/local/share
+
+if [ -d "/usr/local/share/Asterisk" ]; then
+        echo -n "Directory Asterisk Exists. It will be deleted. Should I Proceed? (y/n) "
+        read -n1 x
+        if [ $x == "y" ]; then
+                rm -rf /usr/local/share/Asterisk
+        else
+                echo "Exiting ..."
+                exit
+        fi
+fi
+
 git clone https://github.com/ptiriset/Asterisk.git
 cd Asterisk/rexcl
 cp rexclconf /usr/local/bin
@@ -28,8 +40,10 @@ cd /etc/asterisk
 fgrep "$SIP_STR" $SIP_CONF
 if [ $? -ne 0 ] 
 then	
-	echo "" > $SIP_CONF
+	echo "" >> $SIP_CONF
 	echo "#include \"$SIP_STR\"" >> /etc/asterisk/sip.conf
+fi
+
 fgrep "$EXTEN_STR" $EXTEN_CONF
 if [ $? -ne 0 ]
 then
@@ -37,8 +51,3 @@ then
 	echo "#include \"$EXTEN_STR\"" >> $EXTEN_CONF
 	echo "" >> $EXTEN_CONF
 fi
-
-
-
-
-
