@@ -51,3 +51,6 @@ then
 	echo "#include \"$EXTEN_STR\"" >> $EXTEN_CONF
 	echo "" >> $EXTEN_CONF
 fi
+
+echo "" > /etc/asterisk/voip/placeholder-sip.conf
+echo "" > /etc/asterisk/voip/placeholder-exten.conf
