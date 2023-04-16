@@ -11,11 +11,12 @@ class AsteriskSIPFile:
                          
     phone_t = Template('[$rly_no]\ntype=friend\nsecret=$secret\n'
                        'context=icom-$icom\nqualify=yes\nhost=dynamic\n'
+                       'videosupport=yes\n'
                        'callcounter=yes\nnotifyhold=yes\nnotifyringing=yes\n'
                        'allowsubscribe=yes\ndtmfmode=rfc2833\n'
                        'cc_agent_policy=generic\ncc_monitor_policy=generic\n'
                        'sendrpid=pai\ntrustrpid=yes\nbusylevel=1\n'
-                       'disallow=all\nallow=alaw\nallow=ulaw\nallow=gsm\n'
+                       'disallow=all\nallow=all\nallow=alaw\nallow=ulaw\nallow=gsm\n'
                        'callerid="$disp_name"<>\n'
                        'setvar=CLI_ICOM="$disp_name"<$icom_no>\n'
                        'setvar=CLI_RLY="$disp_name"<$rly_no>\n'
