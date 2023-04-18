@@ -79,12 +79,12 @@ exten => s, 1, Answer
 
 [rly]
 ;conference admin - play pin.
-exten => *26630*, 1, Set(CALLERID(all)=${CLI_RLY})
+exten => *260, 1, Set(CALLERID(all)=${CLI_RLY})
     same => n, Set(ADMIN=${CALLERID(num)})
     same => n, Goto(rly,playpin-${ADMIN},1)
 
 ;conference admin - set pin.
-exten => *26631*, 1, Set(CALLERID(all)=${CLI_RLY})
+exten => *261, 1, Set(CALLERID(all)=${CLI_RLY})
     same => n, Set(ADMIN=${CALLERID(num)})
     same => n, Goto(rly,setpin-${ADMIN},1)
 
