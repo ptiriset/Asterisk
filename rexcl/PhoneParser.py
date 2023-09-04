@@ -50,7 +50,8 @@ class PhoneParser(Parser):
         self.match_token(Parser._COMMA)
         icom_no = self.get_token()
         # Check if the icom_number is already defined. 
-        if (icom, icom_no) in [ (val["icom"], val["icom_no"]) for val in Parser._ast["phone"] ]:
+        if ((icom_no != "") and
+           ((icom, icom_no) in [ (val["icom"], val["icom_no"]) for val in Parser._ast["phone"] ])):
             raise ParsingError("Icom No. " + icom_no +
                                            " for Intercom " + icom +
                                            " is already defined" +
