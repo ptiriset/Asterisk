@@ -75,6 +75,7 @@ class Parser:
         try:
             while(self.lst[self.curp].isalnum() or
                   self.lst[self.curp] == '_' or
+                  self.lst[self.curp] == '/' or
                   self.lst[self.curp] == '-'):
                 #print(self.line + ":" + self.line[token_start:self.curp+1])
                 self.curp += 1
