@@ -44,7 +44,7 @@ exten => s, 1, Set(STATUS=${SIPPEER(${ARG1},status)})
 ; ARG3 -> secy_type
 ; ARG4 -> Should i modify CLI:(yes|no)
 exten => s, 1, GotoIf($[${ARG4} = no ] ? noclimod)
-  same => n, Set(CALLERID(all)=${CLI_RLY})
+; same => n, Set(CALLERID(all)=${CLI_RLY})
   same => n(noclimod), Set(REDIR=${DB(rly-redir/${ARG1})})
   same => n, GotoIf($[ "${REDIR}X" != "X"]?redir)
   same => n, GotoIf($["${ARG2}X" = "X"]?nosecy)
