@@ -19,6 +19,7 @@ class AsteriskSIPFile:
                        'cc_agent_policy=generic\ncc_monitor_policy=generic\n'
                        'sendrpid=pai\ntrustrpid=yes\nbusylevel=1\n'
                        'disallow=all\nallow=all\nallow=alaw\nallow=ulaw\nallow=gsm\n'
+                       'allow=h264\nallow=vp8\n'
                        'callerid="$disp_name"<>\n'
                        'setvar=CLI_ICOM="$disp_name"<$icom_no>\n'
                        'setvar=CLI_RLY="$disp_name"<$rly_no>\n'
@@ -41,7 +42,9 @@ class AsteriskSIPFile:
     siptrunk_t = Template('[sip-$reg_name]\n'
                            'context=rly\nqualify=no\n'
                          'type=peer\ndisallow=all\n'
+                          'videosupport=yes\n'
                          'insecure=invite\ncanreinvite=no\n'
+                          'allow=h264\nallow=vp8\n'
                          'allow=alaw\nallow=ulaw\nallow=gsm\n'
                          'allow=g729\n'
                            'host=$reg_ip\n\n')
