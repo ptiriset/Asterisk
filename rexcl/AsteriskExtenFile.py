@@ -49,11 +49,11 @@ exten => s, 1, GotoIf($[${ARG4} = no ] ? noclimod)
   same => n, GotoIf($[ "${REDIR}X" != "X"]?redir)
   same => n, GotoIf($["${ARG2}X" = "X"]?nosecy)
   same => n, GotoIf($[${CALLERID(num)} = ${ARG2}]?nosecy)
-  same => n, GotoIf($[${ARG3}=only-secy]?only-secy)
+  same => n, GotoIf($[${ARG3}=only_secy]?only_secy)
   same => n, Dial(SIP/${ARG2},15,tT)
   same => n(nosecy), Dial(SIP/${ARG1},60,tT)
   same => n, Hangup
-  same => n(only-secy) DIal(SIP/${ARG2},60,tT)
+  same => n(only_secy), DIal(SIP/${ARG2},60,tT)
   same => n, Hangup
   same => n(redir), Goto(rly,${REDIR})
   
