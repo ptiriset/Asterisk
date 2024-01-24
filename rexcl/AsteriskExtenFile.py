@@ -78,6 +78,12 @@ exten => s, 1, Answer
     same => n, Hangup
 
 [rly]
+;Call forward
+exten=> _*72,1,NoOp(Activating Call Forwarding)
+    same => n,Read(FORWARD_DESTINATION,,5) ; Prompt the user to enter the destination
+    same => n,Set(DB(CF/${CALLERID(num)})=${FORWARD_DESTINATION}) ; Store the forwardi>
+    same => n,Hangup
+
 ;conference admin - play pin.
 exten => *260, 1, Set(CALLERID(all)=${CLI_RLY})
     same => n, Set(ADMIN=${CALLERID(num)})
