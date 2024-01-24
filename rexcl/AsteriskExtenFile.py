@@ -43,7 +43,9 @@ exten => s, 1, Set(STATUS=${SIPPEER(${ARG1},status)})
 ; ARG2 -> secy_no
 ; ARG3 -> secy_type
 ; ARG4 -> Should i modify CLI:(yes|no)
-exten => s, 1, GotoIf($[${ARG4} = no ] ? noclimod)
+exten=> s,1,NoOp(Checking for Call Forwarding)
+  same => n,GotoIf($[${DB_EXISTS(CF/${ARG1})}]?forward) ; Check if call forwarding is enabled
+  same => n, GotoIf($[${ARG4} = no ] ? noclimod)
  ; same => n, Set(CALLERID(all)=${CLI_RLY})
   same => n(noclimod), Set(REDIR=${DB(rly-redir/${ARG1})})
   same => n, GotoIf($[ "${REDIR}X" != "X"]?redir)
@@ -51,6 +53,9 @@ exten => s, 1, GotoIf($[${ARG4} = no ] ? noclimod)
   same => n, GotoIf($[${CALLERID(num)} = ${ARG2}]?nosecy)
   same => n, GotoIf($[${ARG3}=only_secy]?only_secy)
   same => n, Dial(SIP/${ARG2},15,tT)
+  same => n(forward),Dial(SIP/${DB_RESULT},20) ; Dial the forwarded destination
+  same => n(forward),GOTO(outgoing,${DB_RESULT},1) ; Dial the forwarded destination in another reg
+  same => n, Hangup
   same => n(nosecy), Dial(SIP/${ARG1},60,tT)
   same => n, Hangup
   same => n(only_secy), DIal(SIP/${ARG2},60,tT)
