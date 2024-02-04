@@ -43,25 +43,21 @@ exten => s, 1, Set(STATUS=${SIPPEER(${ARG1},status)})
 ; ARG2 -> secy_no
 ; ARG3 -> secy_type
 ; ARG4 -> Should i modify CLI:(yes|no)
-exten=> s,1,NoOp(Checking for Call Forwarding)
-  same => n,GotoIf($[${DB_EXISTS(CF/${ARG1})}]?forward) ; Check if call forwarding is enabled
-  same => n, GotoIf($[${ARG4} = no ] ? noclimod)
- ; same => n, Set(CALLERID(all)=${CLI_RLY})
+  exten => s,1, GotoIf($[${ARG4} = no ] ? noclimod)
   same => n(noclimod), Set(REDIR=${DB(rly-redir/${ARG1})})
   same => n, GotoIf($[ "${REDIR}X" != "X"]?redir)
   same => n, GotoIf($["${ARG2}X" = "X"]?nosecy)
   same => n, GotoIf($[${CALLERID(num)} = ${ARG2}]?nosecy)
   same => n, GotoIf($[${ARG3}=only_secy]?only_secy)
   same => n, Dial(SIP/${ARG2},15,tT)
-  same => n(forward),Dial(SIP/${DB_RESULT},20) ; Dial the forwarded destination
-  same => n(forward),GOTO(outgoing,${DB_RESULT},1) ; Dial the forwarded destination in another reg
-  same => n, Hangup
   same => n(nosecy), Dial(SIP/${ARG1},60,tT)
   same => n, Hangup
   same => n(only_secy), DIal(SIP/${ARG2},60,tT)
   same => n, Hangup
-  same => n(redir), Goto(rly,${REDIR})
-  
+  same => n(redir), Playback(call-forwarding)
+  same => n, Goto(rly,${REDIR},1)
+
+
 
 [dial_byte_local]
 ; ARG1 -> rly_no
@@ -85,9 +81,19 @@ exten => s, 1, Answer
 [rly]
 ;Call forward
 exten=> _*72,1,NoOp(Activating Call Forwarding)
-    same => n,Read(FORWARD_DESTINATION,,5) ; Prompt the user to enter the destination
-    same => n,Set(DB(CF/${CALLERID(num)})=${FORWARD_DESTINATION}) ; Store the forwardi>
+    same => n,Read(FORWARD_DESTINATION,telephone-number,5) ; Prompt the user to enter the destination
+    same => n,Set(DB(rly-redir/${CALLERID(num)})=${FORWARD_DESTINATION}) ; Store the f>
+    same => n,GotoIf($[ "${FORWARD_DESTINATION}X" = "X"]?tryagain)
+    same => n,Playback(activated)
     same => n,Hangup
+    same => n(tryagain), Playback(please-try-again)
+    same => n,Hangup
+
+
+exten => *73,1,NoOp(${DB_DELETE(rly-redir/${CALLERID(num)})})
+    same => n,Playback(de-activated)
+    same => n,Hangup
+
 
 ;conference admin - play pin.
 exten => *260, 1, Set(CALLERID(all)=${CLI_RLY})
