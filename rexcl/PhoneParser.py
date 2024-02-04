@@ -82,6 +82,13 @@ class PhoneParser(Parser):
                                        " for Phone " + name +
                                        " is already defined" +
                                        ". " + self.error_string())
+ 
+        self.match_token(Parser._COMMA) # new
+        callgroup = self.get_token() #assigning call group number
+
+        self.match_token(Parser._COMMA) #new
+        pickupgroup = self.get_token() #assigning pickup group number
+
 
         self.match_token(Parser._RP)
         
@@ -94,6 +101,8 @@ class PhoneParser(Parser):
             "secret": secret,
             "rly_no": rly_no,
             "pstn_no": pstn_no,
+            "callgroup": callgroup, #new
+            "pickupgroup": pickupgroup, #new
             "byte_no": "",
             "secy_no": "",
             "secy_type": "default",
