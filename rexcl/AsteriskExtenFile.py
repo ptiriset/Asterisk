@@ -193,8 +193,8 @@ class AsteriskExtenFile:
 
     # rly_no
     # secy_no
-   __conf_dial_rly_local_t = Template('exten => $rly_no, 1, GoSub(dial_rly_local,s,1($rly_no,$secy_no,$secy_type,yes,$parallel_num))\n'  #new var for parallel phone
-                                       'exten => t$rly_no, 1, GoSub(dial_rly_local,s,1($rly_no,$secy_no,$secy_type,no,$parallel_num))\n'  #new var for parallel phone
+    __conf_dial_rly_local_t = Template('exten => $rly_no, 1, GoSub(dial_rly_local,s,1($rly_no,$secy_no,$secy_type,yes,$parallel_num))\n' 
+                                       'exten => t$rly_no, 1, GoSub(dial_rly_local,s,1($rly_no,$secy_no,$secy_type,no,$parallel_num))\n' 
                                        )
     __conf_byte_local_t = Template(
         'exten => byte-$rly_no, 1, GoSub(dial_byte_local,s,1($rly_no))\n')
