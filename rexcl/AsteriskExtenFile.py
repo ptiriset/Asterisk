@@ -193,8 +193,8 @@ class AsteriskExtenFile:
 
     # rly_no
     # secy_no
-   __conf_dial_rly_local_t = Template('exten => $rly_no, 1, GoSub(dial_rly_local,s,1($rly_no,$secy_no,$secy_type,yes,$parallel_num))\n'  #new var for || phone
-                                       'exten => t$rly_no, 1, GoSub(dial_rly_local,s,1($rly_no,$secy_no,$secy_type,no,$parallel_num))\n'  #new var for || phone
+   __conf_dial_rly_local_t = Template('exten => $rly_no, 1, GoSub(dial_rly_local,s,1($rly_no,$secy_no,$secy_type,yes,$parallel_num))\n'  #new var for parallel phone
+                                       'exten => t$rly_no, 1, GoSub(dial_rly_local,s,1($rly_no,$secy_no,$secy_type,no,$parallel_num))\n'  #new var for parallel phone
                                        )
     __conf_byte_local_t = Template(
         'exten => byte-$rly_no, 1, GoSub(dial_byte_local,s,1($rly_no))\n')
@@ -316,13 +316,13 @@ class AsteriskExtenFile:
                     # Local rly _no
                     s1 = self.__conf_dial_rly_local_t.substitute({
                         'rly_no': ph['rly_no'],
-                        'parallel_num': ph['parallel_num'],  #new line for || phone
+                        'parallel_num': ph['parallel_num'],  #new line for parallel phone
                         'secy_type': ph['secy_type'],
                         'secy_no': ph['secy_no']})
                     if Parser._ast['general']['rly-std-code'] != '':
                         s1 += self.__conf_dial_rly_local_t.substitute({
                         'rly_no': Parser._ast['general']['rly-std-code'] + ph['rly_no'],
-                        'parallel_num': ph['parallel_num'], #new line for || phone
+                        'parallel_num': ph['parallel_num'], #new line for parallel phone
                         'secy_type': ph['secy_type'],
                         'secy_no': ph['secy_no']})
                         
