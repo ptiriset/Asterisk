@@ -107,6 +107,7 @@ class PhoneParser(Parser):
             "secy_no": "",
             "secy_type": "default",
             "line_no": line_no,
+            "parallel_num": "", #new line for parallel phone: sag
             "breg": "",
             "model": "",
             "mac": ""
