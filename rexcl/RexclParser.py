@@ -16,7 +16,7 @@ from ConferenceParser import ConferenceParser
 from MapParser import MapParser
 from IPPhoneParser import IPPhoneParser
 from PhoneConfGenerator import PhoneConfGenerator
-
+from parallelParser import parallelParser
 
 class RexclParser:
     def __init__(self):
@@ -59,6 +59,8 @@ class RexclParser:
                 MapParser(line_no, line)
             elif keyword == "ipphone":
                 IPPhoneParser(line_no, line)
+            elif keyword == "parallel":  #new line for parallel Phone connection : Sag
+                parallelParser(line_no, line)
             else:
                 raise ParsingError(f"Line No. {line_no}: Unknown statement: {line}")
 
