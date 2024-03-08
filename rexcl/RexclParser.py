@@ -8,6 +8,7 @@ from IcomParser import IcomParser
 from PhoneParser import PhoneParser
 from AsteriskSIPFile import AsteriskSIPFile
 from AsteriskExtenFile import AsteriskExtenFile
+from AsteriskVmFile import AsteriskVmFile
 from ByteParser import ByteParser
 from GatewayParser import GatewayParser
 from BossSecyParser import BossSecyParser
@@ -94,5 +95,6 @@ class RexclParser:
         #print(Parser._ast)
         AsteriskSIPFile(reg_lst, Parser._ast["phone"])
         AsteriskExtenFile(reg_lst, Parser._ast["phone"])
+        AsteriskVmFile(reg_lst, Parser._ast["phone"])
         PhoneConfGenerator()
         
