@@ -52,8 +52,10 @@ exten => s, 1, Set(STATUS=${SIPPEER(${ARG1},status)})
   same => n, Dial(SIP/${ARG2},15,tT)
   same => n(nosecy), GotoIf($["${ARG5}X" != "X"]?parallel)
   same => n, Dial(SIP/${ARG1},60,tT)
+  same => n, Voicemail(${ARG1}@rexcs,u)
   same => n, Hangup
   same => n(parallel), Dial(SIP/${ARG1} & SIP/${ARG5},60,tT)
+  same => n, Voicemail(${ARG1}@rexcs,u)
   same => n, Hangup
   same => n(only_secy), DIal(SIP/${ARG2},60,tT)
   same => n, Hangup
@@ -121,6 +123,8 @@ exten => *31, 1, CallCompletionCancel
 exten => *38, 1, Answer
     same => n, SayUnixTime(,Asia/Kolkata,ABdY \’digits/at\’ IMp)
     same => n, Hangup
+exten => *100,1,VoiceMailMain(${CALLERID(num)}@rexcs) 
+    
 
 """
 
