@@ -44,7 +44,9 @@ exten => s, 1, Set(STATUS=${SIPPEER(${ARG1},status)})
 ; ARG3 -> secy_type
 ; ARG4 -> Should i modify CLI:(yes|no)
   exten => s,1, GotoIf($[${ARG4} = no ] ? noclimod)
-  same => n(noclimod), Set(REDIR=${DB(rly-redir/${ARG1})})
+  same => n(noclimod), NoOp(Check for Blacklisting)
+  same => n, GotoIf($["${DB(blist/${CALLERID(num)})}"="${ARG1}"]?bl) ;To check The blocklist
+  same => n, Set(REDIR=${DB(rly-redir/${ARG1})})
   same => n, GotoIf($[ "${REDIR}X" != "X"]?redir)
   same => n, GotoIf($["${ARG2}X" = "X"]?nosecy)
   same => n, GotoIf($[${CALLERID(num)} = ${ARG2}]?nosecy)
@@ -61,6 +63,9 @@ exten => s, 1, Set(STATUS=${SIPPEER(${ARG1},status)})
   same => n, Hangup
   same => n(redir), Playback(call-forwarding)
   same => n, Goto(rly,${REDIR},1)
+  same => n(bl),Answer()
+  same => n,Playback(rexcsVoice/number-trying-to-call-blacklisted-you)
+  same => n,Hangup
 
 
 
@@ -123,8 +128,28 @@ exten => *31, 1, CallCompletionCancel
 exten => *38, 1, Answer
     same => n, SayUnixTime(,Asia/Kolkata,ABdY \’digits/at\’ IMp)
     same => n, Hangup
-exten => *100,1,VoiceMailMain(${CALLERID(num)}@rexcs) 
     
+exten => *100,1,VoiceMailMain(${CALLERID(num)}@rexcs) 
+
+;Code for Blacklisting a number
+exten => *36,1,NoOp(Initiating Call Blacklisting)
+    same => n,Read(blacklist-number,rexcsVoice/enter-number-to-add-to-blacklist) ;Prompt to enter the number which need to added to blacklist.
+    same => n,Playback(beep)
+    same => n,Playback(you-entered)
+    same => n,SayDigits(${blacklist-number})
+    same => n,Set(DB(blist/${blacklist-number})=${CALLERID(num)})
+    same => n,Playback(rexcsVoice/entered-number-added-to-blacklist)
+    same => n,Hangup
+    
+;Code to delete a number from Blacklist
+exten => *37,1,NoOp(Deleting Extensions from Blacklisting)
+    same => n,Read(bdel-number,rexcsVoice/enter-number-to-delete-from-blacklist) ; Prompt to enter the number which need to be removed from balcklist.
+    same => n,Playback(beep)
+    same => n,Playback(you-entered)
+    same => n,SayDigits(${bdel-number})
+    same => n,NoOp(${DB_DELETE(blist/${bdel-number})}) ; This will delete the number from the blist DB entry
+    same => n,Playback(rexcsVoice/entered-number-deleted-from-blacklist)
+    same => n,HangUp
 
 """
 
