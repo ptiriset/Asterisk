@@ -43,10 +43,15 @@ exten => s, 1, Set(STATUS=${SIPPEER(${ARG1},status)})
 ; ARG2 -> secy_no
 ; ARG3 -> secy_type
 ; ARG4 -> Should i modify CLI:(yes|no)
-  exten => s,1, GotoIf($[${ARG4} = no ] ? noclimod)
+  exten => s,1, GotoIf($[${ARG4} = no ] ?noclimod)
   same => n(noclimod), NoOp(Check for Blacklisting)
   same => n, GotoIf($["${DB(blist/${CALLERID(num)})}"="${ARG1}"]?bl) ;To check The blocklist
-  same => n, Set(REDIR=${DB(rly-redir/${ARG1})})
+  same => n, GotoIf($["${ARG6}" != "Yes" ] ?norec)
+  same => n,Progress()
+  same => n,Set(CURRENT_DATE=${STRFTIME(${EPOCH},,%Y.%m.%d)}) ; Get current date in YYYY.MM.DD format
+  same => n,Set(CURRENT_TIME=${STRFTIME(${EPOCH},,%H:%M:%S)}) ; Get current time in HH:MM:SS format
+  same => n,MixMonitor(rec_${ARG1}_${CALLERID(num)}_${CURRENT_DATE}_${CURRENT_TIME}.wav,aB)
+  same => n(norec), Set(REDIR=${DB(rly-redir/${ARG1})})
   same => n, GotoIf($[ "${REDIR}X" != "X"]?redir)
   same => n, GotoIf($["${ARG2}X" = "X"]?nosecy)
   same => n, GotoIf($[${CALLERID(num)} = ${ARG2}]?nosecy)
@@ -222,8 +227,8 @@ class AsteriskExtenFile:
 
     # rly_no
     # secy_no
-    __conf_dial_rly_local_t = Template('exten => $rly_no, 1, GoSub(dial_rly_local,s,1($rly_no,$secy_no,$secy_type,yes,$parallel_num))\n' 
-                                       'exten => t$rly_no, 1, GoSub(dial_rly_local,s,1($rly_no,$secy_no,$secy_type,no,$parallel_num))\n' 
+    __conf_dial_rly_local_t = Template('exten => $rly_no, 1, GoSub(dial_rly_local,s,1($rly_no,$secy_no,$secy_type,yes,$parallel_num,$recording))\n' 
+                                       'exten => t$rly_no, 1, GoSub(dial_rly_local,s,1($rly_no,$secy_no,$secy_type,no,$parallel_num,$recording))\n' 
                                        )
     __conf_byte_local_t = Template(
         'exten => byte-$rly_no, 1, GoSub(dial_byte_local,s,1($rly_no))\n')
@@ -346,12 +351,14 @@ class AsteriskExtenFile:
                     s1 = self.__conf_dial_rly_local_t.substitute({
                         'rly_no': ph['rly_no'],
                         'parallel_num': ph['parallel_num'],  #new line for parallel phone
+                        'recording': ph['recording'],   #new line for recording
                         'secy_type': ph['secy_type'],
                         'secy_no': ph['secy_no']})
                     if Parser._ast['general']['rly-std-code'] != '':
                         s1 += self.__conf_dial_rly_local_t.substitute({
                         'rly_no': Parser._ast['general']['rly-std-code'] + ph['rly_no'],
                         'parallel_num': ph['parallel_num'], #new line for parallel phone
+                        'recording': ph['recording'],   #new line for recording
                         'secy_type': ph['secy_type'],
                         'secy_no': ph['secy_no']})
                         
