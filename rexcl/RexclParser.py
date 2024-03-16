@@ -19,6 +19,7 @@ from IPPhoneParser import IPPhoneParser
 from PhoneConfGenerator import PhoneConfGenerator
 from parallelParser import parallelParser
 from voicemailParser import voicemailParser  #new line for voicemail : Sag
+from recordingParser import recordingParser  #new line for recording : Sag
 
 class RexclParser:
     def __init__(self):
@@ -65,6 +66,8 @@ class RexclParser:
                 parallelParser(line_no, line)
             elif keyword == "vm":  #new line for parallel Phone connection : Sag
                 voicemailParser(line_no, line)
+            elif keyword == "rec":  #new line for enable recording : Sag
+                recordingParser(line_no, line)
             else:
                 raise ParsingError(f"Line No. {line_no}: Unknown statement: {line}")
 
