@@ -109,6 +109,7 @@ class PhoneParser(Parser):
             "line_no": line_no,
             "parallel_num": "", #new line for parallel phone: sag
             "vm_pw": "", #new line for parallel phone: sag
+            "recording": "", #new line for parallel phone: sag
             "breg": "",
             "model": "",
             "mac": ""
