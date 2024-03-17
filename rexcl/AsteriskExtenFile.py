@@ -137,24 +137,24 @@ exten => *38, 1, Answer
 exten => *100,1,VoiceMailMain(${CALLERID(num)}@rexcs) 
 
 ;Code for Blacklisting a number
-exten => *36,1,NoOp(Initiating Call Blacklisting)
-    same => n,Read(blacklist-number,rexcsVoice/enter-number-to-add-to-blacklist) ;Prompt to enter the number which need to added to blacklist.
-    same => n,Playback(beep)
-    same => n,Playback(you-entered)
-    same => n,SayDigits(${blacklist-number})
-    same => n,Set(DB(blist/${blacklist-number})=${CALLERID(num)})
-    same => n,Playback(rexcsVoice/entered-number-added-to-blacklist)
-    same => n,Hangup
+;exten => *36,1,NoOp(Initiating Call Blacklisting)
+;    same => n,Read(blacklist-number,rexcsVoice/enter-number-to-add-to-blacklist) ;Prompt to enter the number which need to added to blacklist.
+;    same => n,Playback(beep)
+;    same => n,Playback(you-entered)
+;    same => n,SayDigits(${blacklist-number})
+;    same => n,Set(DB(blist/${blacklist-number})=${CALLERID(num)})
+;    same => n,Playback(rexcsVoice/entered-number-added-to-blacklist)
+;    same => n,Hangup
     
 ;Code to delete a number from Blacklist
-exten => *37,1,NoOp(Deleting Extensions from Blacklisting)
-    same => n,Read(bdel-number,rexcsVoice/enter-number-to-delete-from-blacklist) ; Prompt to enter the number which need to be removed from balcklist.
-    same => n,Playback(beep)
-    same => n,Playback(you-entered)
-    same => n,SayDigits(${bdel-number})
-    same => n,NoOp(${DB_DELETE(blist/${bdel-number})}) ; This will delete the number from the blist DB entry
-    same => n,Playback(rexcsVoice/entered-number-deleted-from-blacklist)
-    same => n,HangUp
+;exten => *37,1,NoOp(Deleting Extensions from Blacklisting)
+;    same => n,Read(bdel-number,rexcsVoice/enter-number-to-delete-from-blacklist) ; Prompt to enter the number which need to be removed from balcklist.
+;    same => n,Playback(beep)
+;    same => n,Playback(you-entered)
+;    same => n,SayDigits(${bdel-number})
+;    same => n,NoOp(${DB_DELETE(blist/${bdel-number})}) ; This will delete the number from the blist DB entry
+;    same => n,Playback(rexcsVoice/entered-number-deleted-from-blacklist)
+;    same => n,HangUp
 
 """
 
