@@ -43,9 +43,11 @@ exten => s, 1, Set(STATUS=${SIPPEER(${ARG1},status)})
 ; ARG2 -> secy_no
 ; ARG3 -> secy_type
 ; ARG4 -> Should i modify CLI:(yes|no)
+; ARG5 -> Parallel Number
+; ARG6 -> recording:(yes|no)
   exten => s,1, GotoIf($[${ARG4} = no ] ?noclimod)
   same => n(noclimod), NoOp(Check for Blacklisting)
-  same => n, GotoIf($["${DB(blist/${CALLERID(num)})}"="${ARG1}"]?bl) ;To check The blocklist
+ ; same => n, GotoIf($["${DB(blist/${CALLERID(num)})}"="${ARG1}"]?bl) ;To check The blocklist
   same => n, GotoIf($["${ARG6}" != "Yes" ] ?norec)
   same => n,Progress()
   same => n,Set(CURRENT_DATE=${STRFTIME(${EPOCH},,%Y.%m.%d)}) ; Get current date in YYYY.MM.DD format
@@ -68,9 +70,9 @@ exten => s, 1, Set(STATUS=${SIPPEER(${ARG1},status)})
   same => n, Hangup
   same => n(redir), Playback(call-forwarding)
   same => n, Goto(rly,${REDIR},1)
-  same => n(bl),Answer()
-  same => n,Playback(rexcsVoice/number-trying-to-call-blacklisted-you)
-  same => n,Hangup
+;  same => n(bl),Answer()
+;  same => n,Playback(rexcsVoice/number-trying-to-call-blacklisted-you)
+;  same => n,Hangup
 
 
 
@@ -344,6 +346,7 @@ class AsteriskExtenFile:
                 
                 # Now generate rly context
             self.__write_files(fp, fs, ip_s, "[rly]\n")
+            self.__write_files(fp, fs, ip_s, "include => outgoing\n")
             #print(self.phone_lst)
             for ph in self.phone_lst:
                 if ph['reg'] == reg:
