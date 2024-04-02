@@ -4,7 +4,7 @@ from Parser import Parser
 
 class AsteriskSIPFile:
     _gateway_t = Template('[sip-$gw]\n'
-                         'context=rly\nqualify=no\n'
+                         'context=rly\nqualify=yes\n'
                          'type=peer\ndisallow=all\n'
                          'insecure=invite\ncanreinvite=no\n'
                          'allow=alaw\nallow=ulaw\nallow=gsm\n'
@@ -31,7 +31,7 @@ class AsteriskSIPFile:
                        'context=icom-$icom-byte\nqualify=yes\nhost=dynamic\n'
                        'callcounter=yes\nnotifyhold=yes\nnotifyringing=yes\n'
                        'allowsubscribe=yes\ndtmfmode=rfc2833\n'
-                       'cc_agent_policy=generic\ncc-monitor_policy=generic\n'
+                       'cc_agent_policy=generic\ncc_monitor_policy=generic\n'
                        'sendrpid=pai\ntrustrpid=yes\nbusylevel=1\n'
                        'disallow=all\nallow=all\nallow=alaw\nallow=ulaw\nallow=gsm\n'
                        'allow=h264\nallow=vp8\n'
