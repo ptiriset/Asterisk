@@ -29,6 +29,7 @@ class AsteriskSIPFile:
 
     byte_phone_t = Template('[$rly_no]\ntype=friend\nsecret=$secret\n'
                        'context=icom-$icom-byte\nqualify=yes\nhost=dynamic\n'
+                       'videosupport=yes\n'
                        'callcounter=yes\nnotifyhold=yes\nnotifyringing=yes\n'
                        'allowsubscribe=yes\ndtmfmode=rfc2833\n'
                        'cc_agent_policy=generic\ncc_monitor_policy=generic\n'
@@ -43,14 +44,14 @@ class AsteriskSIPFile:
                        'setvar=CLI_PSTN="$disp_name"<$pstn_no>\n\n')
 
     siptrunk_t = Template('[sip-$reg_name]\n'
-                           'context=rly\nqualify=no\n'
-                         'type=peer\ndisallow=all\n'
-                          'videosupport=yes\n'
-                         'insecure=invite\ncanreinvite=no\n'
-                          'allow=h264\nallow=vp8\n'
-                         'allow=alaw\nallow=ulaw\nallow=gsm\n'
-                         'allow=g729\n'
-                           'host=$reg_ip\n\n')
+                        'context=rly\nqualify=no\n'
+                        'type=peer\ndisallow=all\n'
+                        'videosupport=yes\n'
+                        'insecure=invite\ncanreinvite=no\n'
+                        'allow=h264\nallow=vp8\n'
+                        'allow=alaw\nallow=ulaw\nallow=gsm\n'
+                        'allow=g729\n'
+                        'host=$reg_ip\n\n')
 
 
     def __init__(self, reg_lst, phone_lst):
