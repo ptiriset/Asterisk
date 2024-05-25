@@ -234,6 +234,8 @@ class AsteriskExtenFile:
                                        )
     __conf_byte_local_t = Template(
         'exten => byte-$rly_no, 1, GoSub(dial_byte_local,s,1($rly_no))\n')
+    __conf_hint_local_t = Template(
+        'exten => $rly_no, hint, SIP/$rly_no\n')
     __conf_byte_remote_t = Template(
         'exten => byte-$rly_no, 1, GoSub(dial_byte_remote,s,1($rly_no,$sip1, $sip2))\n')
     
@@ -368,6 +370,10 @@ class AsteriskExtenFile:
                     if ph["byte_no"] != "":
                         s1 += self.__conf_byte_local_t.substitute({
                             'rly_no': ph["rly_no"]})
+                      
+                    s1 += self.__conf_hint_local_t.substitute({
+                            'rly_no': ph["rly_no"]})
+                  
                     self.__write_files(fp, fs, ip_s, s1)
                 else:
                     # Remote rly no
