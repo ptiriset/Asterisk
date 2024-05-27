@@ -220,6 +220,7 @@ class AsteriskExtenFile:
     # icom_no
     # rly_no
     __conf_dial_icom_t = Template('exten => $icom_no, 1, GoSub(dial_icom,s,1($icom,$icom_no,$rly_no))\n')
+    __conf_hint_icom_t = Template('exten => $icom_no, hint, SIP/$rly_no\n')
     
     # rly_no,
     # sip1
@@ -341,6 +342,10 @@ class AsteriskExtenFile:
                 for ph in phs:
                     s1 = self.__conf_dial_icom_t.substitute({
                         'icom': icom,
+                        'icom_no': ph['icom_no'],
+                        'rly_no': ph['rly_no']})
+                    self.__write_files(fp, fs, ip_s, s1)
+                    s1 = self.__conf_hint_icom_t.substitute({
                         'icom_no': ph['icom_no'],
                         'rly_no': ph['rly_no']})
                     self.__write_files(fp, fs, ip_s, s1)
