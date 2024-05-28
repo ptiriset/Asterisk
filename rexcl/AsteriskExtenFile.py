@@ -250,6 +250,7 @@ class AsteriskExtenFile:
     )
         
     __conf_byte_t = Template('exten => $byte_no, 1, Goto(rly,byte-$rly_no,1)\n') 
+    __conf_byte_hint_t = Template('exten => $byte_no, hint, SIP/$rly_no\n') 
 
     icom_t = Template('exten => $icom_no, 1, GoSub(dial_icom,s,1($icom,$icom_no,$rly_no))\n')
     # AEL templates. 
@@ -419,6 +420,10 @@ class AsteriskExtenFile:
         byte_phones = [x for x in self.phone_lst if x["byte_no"] != "" ]
         for b in byte_phones:
             s1 = self.__conf_byte_t.substitute({
+                'byte_no': b["byte_no"],
+                'rly_no': b["rly_no"]})
+            self.__write_files(fp, fs, ip_s, s1)
+            s1 = self.__conf_byte_hint_t.substitute({
                 'byte_no': b["byte_no"],
                 'rly_no': b["rly_no"]})
             self.__write_files(fp, fs, ip_s, s1)
