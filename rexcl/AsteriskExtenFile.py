@@ -43,8 +43,8 @@ exten => s, 1, Set(STATUS=${SIPPEER(${ARG1},status)})
 ; ARG2 -> secy_no
 ; ARG3 -> secy_type
 ; ARG4 -> Should i modify CLI:(yes|no)
-; ARG5 -> Parallel Number
-; ARG6 -> recording:(yes|no)
+; ARG5-8 -> Parallel Numbers
+; ARG9 -> recording:(yes|no)
   exten => s,1, GotoIf($[${ARG4} = no ] ?noclimod)
   same => n(noclimod), NoOp(Check for Blacklisting)
  ; same => n, GotoIf($["${DB(blist/${CALLERID(num)})}"="${ARG1}"]?bl) ;To check The blocklist
@@ -59,11 +59,23 @@ exten => s, 1, Set(STATUS=${SIPPEER(${ARG1},status)})
   same => n, GotoIf($[${CALLERID(num)} = ${ARG2}]?nosecy)
   same => n, GotoIf($[${ARG3}=only_secy]?only_secy)
   same => n, Dial(SIP/${ARG2},15,tT)
-  same => n(nosecy), GotoIf($["${ARG5}X" != "X"]?parallel)
+  same => n(nosecy), GotoIf($["${ARG5}X" != "X"]?parallel1)
   same => n, Dial(SIP/${ARG1},60,tT)
   same => n, Voicemail(${ARG1}@rexcs,u)
   same => n, Hangup
-  same => n(parallel), Dial(SIP/${ARG1} & SIP/${ARG5},60,tT)
+  same => n(parallel1),GotoIf($["${ARG6}X" != "X"]?parallel2)
+  same => n, Dial(SIP/${ARG1} & SIP/${ARG5},60,tT)
+  same => n, Voicemail(${ARG1}@rexcs,u)
+  same => n, Hangup
+  same => n(parallel2),GotoIf($["${ARG6}X" != "X"]?parallel3)
+  same => n, Dial(SIP/${ARG1} & SIP/${ARG5} & SIP/${ARG6} ,60,tT)
+  same => n, Voicemail(${ARG1}@rexcs,u)
+  same => n, Hangup
+  same => n(parallel3),GotoIf($["${ARG6}X" != "X"]?parallel4)
+  same => n, Dial(SIP/${ARG1} & SIP/${ARG5} & SIP/${ARG6} & SIP/${ARG7} ,60,tT)
+  same => n, Voicemail(${ARG1}@rexcs,u)
+  same => n, Hangup
+  same => n(parallel4), Dial(SIP/${ARG1} & SIP/${ARG5} & SIP/${ARG6} & SIP/${ARG7} & SIP/${ARG8},60,tT)
   same => n, Voicemail(${ARG1}@rexcs,u)
   same => n, Hangup
   same => n(only_secy), DIal(SIP/${ARG2},60,tT)
@@ -230,8 +242,8 @@ class AsteriskExtenFile:
 
     # rly_no
     # secy_no
-    __conf_dial_rly_local_t = Template('exten => $rly_no, 1, GoSub(dial_rly_local,s,1($rly_no,$secy_no,$secy_type,yes,$parallel_num,$recording))\n' 
-                                       'exten => t$rly_no, 1, GoSub(dial_rly_local,s,1($rly_no,$secy_no,$secy_type,no,$parallel_num,$recording))\n' 
+    __conf_dial_rly_local_t = Template('exten => $rly_no, 1, GoSub(dial_rly_local,s,1($rly_no,$secy_no,$secy_type,yes,$parallel_num1,$parallel_num2,$parallel_num3,$parallel_num4,$recording))\n' 
+                                       'exten => t$rly_no, 1, GoSub(dial_rly_local,s,1($rly_no,$secy_no,$secy_type,no,$parallel_num1,$parallel_num2,$parallel_num3,$parallel_num4,$recording))\n' 
                                        )
     __conf_byte_local_t = Template(
         'exten => byte-$rly_no, 1, GoSub(dial_byte_local,s,1($rly_no))\n')
@@ -360,14 +372,20 @@ class AsteriskExtenFile:
                     # Local rly _no
                     s1 = self.__conf_dial_rly_local_t.substitute({
                         'rly_no': ph['rly_no'],
-                        'parallel_num': ph['parallel_num'],  #new line for parallel phone
+                        'parallel_num1': ph['parallel_num1'],  #new line for parallel phone
+                        'parallel_num2': ph['parallel_num2'],  #new line for parallel phone
+                        'parallel_num3': ph['parallel_num3'],  #new line for parallel phone
+                        'parallel_num4': ph['parallel_num4'],  #new line for parallel phone
                         'recording': ph['recording'],   #new line for recording
                         'secy_type': ph['secy_type'],
                         'secy_no': ph['secy_no']})
                     if Parser._ast['general']['rly-std-code'] != '':
                         s1 += self.__conf_dial_rly_local_t.substitute({
                         'rly_no': Parser._ast['general']['rly-std-code'] + ph['rly_no'],
-                        'parallel_num': ph['parallel_num'], #new line for parallel phone
+                        'parallel_num1': ph['parallel_num1'],  #new line for parallel phone
+                        'parallel_num2': ph['parallel_num2'],  #new line for parallel phone
+                        'parallel_num3': ph['parallel_num3'],  #new line for parallel phone
+                        'parallel_num4': ph['parallel_num4'],  #new line for parallel phone
                         'recording': ph['recording'],   #new line for recording
                         'secy_type': ph['secy_type'],
                         'secy_no': ph['secy_no']})
