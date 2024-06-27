@@ -67,12 +67,12 @@ exten => s, 1, Set(STATUS=${SIPPEER(${ARG1},status)})
   same => n, Dial(SIP/${ARG1} & SIP/${ARG5},60,tT)
   same => n, Voicemail(${ARG1}@rexcs,u)
   same => n, Hangup
-  same => n(parallel2),GotoIf($["${ARG6}X" != "X"]?parallel3)
-  same => n, Dial(SIP/${ARG1} & SIP/${ARG5} & SIP/${ARG6} ,60,tT)
+  same => n(parallel2),GotoIf($["${ARG7}X" != "X"]?parallel3)
+  same => n, Dial(SIP/${ARG1} & SIP/${ARG5} & SIP/${ARG6},60,tT)
   same => n, Voicemail(${ARG1}@rexcs,u)
   same => n, Hangup
-  same => n(parallel3),GotoIf($["${ARG6}X" != "X"]?parallel4)
-  same => n, Dial(SIP/${ARG1} & SIP/${ARG5} & SIP/${ARG6} & SIP/${ARG7} ,60,tT)
+  same => n(parallel3),GotoIf($["${ARG8}X" != "X"]?parallel4)
+  same => n, Dial(SIP/${ARG1} & SIP/${ARG5} & SIP/${ARG6} & SIP/${ARG7},60,tT)
   same => n, Voicemail(${ARG1}@rexcs,u)
   same => n, Hangup
   same => n(parallel4), Dial(SIP/${ARG1} & SIP/${ARG5} & SIP/${ARG6} & SIP/${ARG7} & SIP/${ARG8},60,tT)
