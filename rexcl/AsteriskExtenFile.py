@@ -123,6 +123,21 @@ exten => *73,1,NoOp(${DB_DELETE(rly-redir/${CALLERID(num)})})
     same => n,Playback(de-activated)
     same => n,Hangup
 
+;Byte Call forward
+exten=> _*74,1,NoOp(Activating Call Forwarding)
+    same => n,Read(FORWARD_DESTINATION,telephone-number) ; Prompt the user to enter the destination
+    same => n,Set(DB(byte-redir/${CALLERID(num)})=${FORWARD_DESTINATION}) ; Store the f>
+    same => n,GotoIf($[ "${FORWARD_DESTINATION}X" = "X"]?tryagain)
+    same => n,Playback(activated)
+    same => n,Hangup
+    same => n(tryagain), Playback(please-try-again)
+    same => n,Hangup
+
+
+exten => *75,1,NoOp(${DB_DELETE(byte-redir/${CALLERID(num)})})
+    same => n,Playback(de-activated)
+    same => n,Hangup
+
 
 ;conference admin - play pin.
 exten => *260, 1, Set(CALLERID(all)=${CLI_RLY})
