@@ -18,6 +18,7 @@ from MapParser import MapParser
 from IPPhoneParser import IPPhoneParser
 from PhoneConfGenerator import PhoneConfGenerator
 from parallelParser import parallelParser
+from byteParallelParser import byteParallelParser  #new line for byteparallel Phone connection : Sag 23.11.24
 from voicemailParser import voicemailParser  #new line for voicemail : Sag
 from recordingParser import recordingParser  #new line for recording : Sag
 
@@ -64,6 +65,8 @@ class RexclParser:
                 IPPhoneParser(line_no, line)
             elif keyword == "parallel":  #new line for parallel Phone connection : Sag
                 parallelParser(line_no, line)
+            elif keyword == "byteparallel":  #new line for byteparallel Phone connection : Sag 23.11.24
+                byteParallelParser(line_no, line)
             elif keyword == "vm":  #new line for parallel Phone connection : Sag
                 voicemailParser(line_no, line)
             elif keyword == "rec":  #new line for enable recording : Sag
