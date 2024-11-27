@@ -111,6 +111,8 @@ class PhoneParser(Parser):
             "parallel_num2": "", #new line for parallel phone: sag
             "parallel_num3": "", #new line for parallel phone: sag
             "parallel_num4": "", #new line for parallel phone: sag
+            "byte_parallel1": "", #new line for byteparallel phone: sag 23.11
+            "byte_parallel2": "", #new line for byteparallel phone: sag 23.11
             "vm_pw": "", #new line for parallel phone: sag
             "recording": "", #new line for parallel phone: sag
             "breg": "",
