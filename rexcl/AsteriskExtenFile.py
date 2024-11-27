@@ -93,7 +93,14 @@ exten => s, 1, Set(STATUS=${SIPPEER(${ARG1},status)})
 exten => s, 1, Set(CALLERID(all)=${CLI_BYTE})
   same => n, Set(REDIR=${DB(byte-redir/${ARG1})})
   same => n, GotoIf($[ "${REDIR}X" != "X"]?redir)
-  same => n, Dial(SIP/${ARG1},60,tT)
+  same => n, GotoIf($["${ARG2}X" != "X"]?parallel1)                         
+  same => n, Dial(SIP/${ARG1},60,tT)                                        
+  same => n, Hangup                                                         
+  same => n(parallel1),GotoIf($["${ARG3}X" != "X"]?parallel2)                            
+  same => n, Dial(SIP/${ARG1} & SIP/${ARG5},60,tT)                          
+  same => n, Hangup                                                         
+  same => n(parallel2),Dial(SIP/${ARG1} & SIP/${ARG2} & SIP/${ARG3} ,60,tT) 
+  same => n, Hangup                                                             
   same => n(redir), Goto(byte-icom,${REDIR})
 
 
@@ -261,7 +268,7 @@ class AsteriskExtenFile:
                                        'exten => t$rly_no, 1, GoSub(dial_rly_local,s,1($rly_no,$secy_no,$secy_type,no,$parallel_num1,$parallel_num2,$parallel_num3,$parallel_num4,$recording))\n' 
                                        )
     __conf_byte_local_t = Template(
-        'exten => byte-$rly_no, 1, GoSub(dial_byte_local,s,1($rly_no))\n')
+        'exten => byte-$rly_no, 1, GoSub(dial_byte_local,s,1($rly_no,$byte_parallel1,$byte_parallel2))\n') ##23.11.24
     __conf_hint_local_t = Template(
         'exten => $rly_no, hint, SIP/$rly_no\n')
     __conf_byte_remote_t = Template(
@@ -408,7 +415,10 @@ class AsteriskExtenFile:
                         
                     if ph["byte_no"] != "":
                         s1 += self.__conf_byte_local_t.substitute({
-                            'rly_no': ph["rly_no"]})
+                            'rly_no': ph["rly_no"],
+                            'byte_parallel1': ph['byte_parallel1'],  ###23.11.24
+                            'byte_parallel2': ph['byte_parallel2']})  ###23.11.24
+                            
                       
                     s1 += self.__conf_hint_local_t.substitute({
                             'rly_no': ph["rly_no"]})
