@@ -31,8 +31,8 @@ The tool uses predefined codes to configure railway exchanges .
 * Replace <input.rexcl> with the path to your specific .rexcl script.
 
 ## 👥 Contributors
-* **Initial Work**: Railway Board / Project Development Team
-* *Detailed contributor list to be added later.*
+* **Initial Work**: Railway Board , HJP Division, IRISET
+* **
 
 ## 📄 License
 This project is intended for use within Indian Railways. 
