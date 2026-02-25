@@ -14,11 +14,20 @@ The Railway Board has adopted open-source **Asterisk** for Inter-Railway communi
 * **Simplified Interface**: No deep knowledge of Asterisk scripting required for basic exchange setup.
 
 ## 🛠️ Installation
-*Coming Soon* — Instructions for setting up the Python environment and dependencies will be added here.
+To set up RExCL on your Asterisk server, place the project files in the specific system share directory:
+
+1. Create the directory:
+   ```bash
+   sudo mkdir -p /usr/local/share/rexcl/
+2. Move the Python source files (including main.py) into that folder.
+3. Ensure the user running the script has permissions to read/write to the Asterisk configuration directory (usually /etc/asterisk/).
 
 ## 💻 Usage
 The tool uses predefined codes to configure railway exchanges . 
-*(Specific command examples will be added as development progresses)*.
+* To process an input file and update your Asterisk configurations, use the following command:
+  ```bash
+  python3 /usr/local/share/rexcl/main.py <input.rexcl>
+* Replace <input.rexcl> with the path to your specific configuration script.
 
 ## 👥 Contributors
 * **Initial Work**: Railway Board / Project Development Team
