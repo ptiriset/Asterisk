@@ -9,7 +9,7 @@ The Railway Board has adopted open-source **Asterisk** for Inter-Railway communi
 * ⚡ **Standardize Configs**: Ensure uniform configuration across different railway exchanges using predefined codes.
 
 ## 🚀 Key Features
-* **Automated File Modification**: Modifies `sip.conf` and `extensions.conf` automatically.
+* **Automated File Modification**: Modifies `sip.conf` , `extensions.conf` etc automatically.
 * **Railway-Specific Logic**: Built-in templates for Inter-Railway numbering and communication standards.
 * **Simplified Interface**: No deep knowledge of Asterisk scripting required for basic exchange setup.
 
@@ -24,10 +24,11 @@ To set up RExCL on your Asterisk server, place the project files in the specific
 
 ## 💻 Usage
 The tool uses predefined codes to configure railway exchanges . 
+* Create a text file with extension '.rexcl'. eg: "yourExch.rexcl" with all the configurations as needed, using predefined commands. 
 * To process an input file and update your Asterisk configurations, use the following command:
   ```bash
   python3 /usr/local/share/rexcl/main.py <input.rexcl>
-* Replace <input.rexcl> with the path to your specific configuration script.
+* Replace <input.rexcl> with the path to your specific .rexcl script.
 
 ## 👥 Contributors
 * **Initial Work**: Railway Board / Project Development Team
