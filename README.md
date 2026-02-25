@@ -1,4 +1,4 @@
-# 🚉 RExCL - Railway Asterisk Configuration Tool
+# 🚉 RExCL - Railway Exchange Configuration Language Tool
 
 **RExCL** is a Python-based utility designed for Indian Railways (IR) to simplify the deployment and management of open-source VoIP exchanges. It automates the modification of core Asterisk configuration files using simple, predefined codes tailored for railway communication needs.
 
